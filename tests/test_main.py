@@ -1,5 +1,6 @@
 from fastapi.testclient import TestClient
 from app.main import app
+from app.job_queue import job_queue
 
 client = TestClient(app)
 
@@ -43,3 +44,8 @@ def test_create_job_rejects_negative_amount():
     )
 
     assert response.status_code == 422
+
+
+def test_create_job_adds_job_to_queue():
+
+    pass
