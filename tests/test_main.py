@@ -1,23 +1,25 @@
 import asyncio
 import json
-from queue import Queue
 
 import httpx
 import pytest
 from fastapi.testclient import TestClient
 
-from app.main import app
+from app.main import create_app
 
 
 @pytest.fixture
-def test_queue(monkeypatch):
-    isolated_queue = Queue(maxsize=1)
-    monkeypatch.setattr("app.main.job_queue", isolated_queue)
-    return isolated_queue
+def app():
+    return create_app(queue_max_size=1, start_worker=False)
 
 
 @pytest.fixture
-def client(test_queue):
+def test_queue(app):
+    return app.state.worker.queue
+
+
+@pytest.fixture
+def client(app):
     with TestClient(app) as test_client:
         yield test_client
 
@@ -127,7 +129,7 @@ def test_job_body_byte_limit(client, test_queue, job_data):
     assert client.post("/jobs", content=body, headers=headers).status_code == 201
 
 
-def test_streamed_job_body_is_limited_without_content_length(test_queue, job_data):
+def test_streamed_job_body_is_limited_without_content_length(app, test_queue, job_data):
     async def chunks():
         yield json.dumps(job_data).encode().ljust(4096)
         yield b" "

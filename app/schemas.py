@@ -22,3 +22,16 @@ class CreateJobRequest(BaseModel):
         if isinstance(value, str):
             return value.upper()
         return value
+
+
+class JobAcceptedResponse(BaseModel):
+    job_id: str
+    status: Literal["queued"]
+
+
+class JobStatusResponse(BaseModel):
+    job_id: str
+    status: Literal["queued", "processing", "completed", "failed"] = Field(
+        description="Local processing state. Completed implies no payment or business outcome."
+    )
+    data: CreateJobRequest
