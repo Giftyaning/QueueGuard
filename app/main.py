@@ -1,10 +1,12 @@
 from contextlib import asynccontextmanager
 from queue import Full, Queue
+from time import monotonic
+from typing import Callable
 
 from fastapi import APIRouter, FastAPI, HTTPException
 
 from app.body_limit import MAX_JOB_BODY_BYTES, JobBodyLimitRoute
-from app.job_queue import QUEUE_MAX_SIZE
+from app.job_queue import QUEUE_MAX_SIZE, get_status_retention_seconds
 from app.schemas import CreateJobRequest, JobAcceptedResponse, JobStatusResponse
 from app.worker import JobWorker, Processor, process_job
 
@@ -14,11 +16,21 @@ def create_app(
     queue_max_size: int = QUEUE_MAX_SIZE,
     processor: Processor = process_job,
     start_worker: bool = True,
+    status_retention_seconds: float | None = None,
+    clock: Callable[[], float] = monotonic,
 ) -> FastAPI:
-    """Own one queue, status store and worker; inject capacity and processing only."""
+    """Own one queue, expiring status store and worker."""
     if queue_max_size < 1:
         raise ValueError("queue_max_size must be a positive integer")
-    worker = JobWorker(Queue(maxsize=queue_max_size), processor)
+    worker = JobWorker(
+        Queue(maxsize=queue_max_size),
+        processor,
+        status_retention_seconds=(
+            get_status_retention_seconds()
+            if status_retention_seconds is None else status_retention_seconds
+        ),
+        clock=clock,
+    )
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
@@ -65,7 +77,7 @@ def create_app(
     @app.get(
         "/jobs/{job_id}",
         response_model=JobStatusResponse,
-        responses={404: {"description": "Unknown job ID"}},
+        responses={404: {"description": "Unknown job ID or expired job status"}},
     )
     def get_job(job_id: str):
         """Return the current lifecycle state and the accepted, normalized data."""
