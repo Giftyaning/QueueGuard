@@ -1,6 +1,6 @@
 # QueueGuard
 
-![QueueGuard Banner](assets/queueguard-banner.svg)
+![QueueGuard Banner](assets/queueguard-banner.png)
 
 QueueGuard is a Python/FastAPI portfolio prototype for accepting validated,
 payment-shaped jobs and observing their background processing. It explores
@@ -39,7 +39,7 @@ includes runtime and test dependencies. Both use the transitive pins in
 
 ## Architecture and lifecycle
 
-![QueueGuard Architecture](assets/queueguard-architecture.png)
+![QueueGuard Architecture](assets/queueguard-architecture.svg)
 
 ```mermaid
 flowchart LR
