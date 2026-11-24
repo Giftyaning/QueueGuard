@@ -1,0 +1,31 @@
+# Python bytecode and interpreter caches
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Pytest cache
+.pytest_cache/
+
+# Coverage reports and data
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+coverage.json
+
+# Local environment settings; keep shareable examples available
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# macOS metadata
+.DS_Store
+._*
+.Spotlight-V100/
+.Trashes/
