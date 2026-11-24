@@ -39,7 +39,7 @@ includes runtime and test dependencies. Both use the transitive pins in
 
 ## Architecture and lifecycle
 
-![QueueGuard Architecture](assets/queueguard-architecture.svg)
+![QueueGuard Architecture](assets/queueguard-architecture.png)
 
 ```mermaid
 flowchart LR
