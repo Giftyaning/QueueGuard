@@ -1,6 +1,6 @@
 # QueueGuard
 
-![QueueGuard — Background Job Processing System](assets/queueguard-banner.svg)
+![QueueGuard Banner](assets/queueguard-banner.svg)
 
 QueueGuard is a Python/FastAPI portfolio prototype for accepting validated,
 payment-shaped jobs and observing their background processing. It explores
@@ -38,6 +38,8 @@ includes runtime and test dependencies. Both use the transitive pins in
 `constraints.txt`, including dependencies required by FastAPI itself.
 
 ## Architecture and lifecycle
+
+![QueueGuard Architecture](assets/queueguard-architecture.svg)
 
 ```mermaid
 flowchart LR
