@@ -39,10 +39,8 @@ includes runtime and test dependencies. Both use the transitive pins in
 
 ## Architecture and lifecycle
 
-![QueueGuard Architecture](assets/queueguard-architecture.svg)
-
 ```mermaid
-flowchart LR
+flowchart TD
     Client -->|Submit or look up a job| API[FastAPI]
     API -->|Validate and enqueue| Queue[Bounded waiting queue]
     Queue -->|Retrieve| Worker[Worker thread]
